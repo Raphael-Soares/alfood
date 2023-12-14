@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import IRestaurante from '../../interfaces/IRestaurante';
+import { useEffect, useState } from 'react';
+import IRestaurante from 'interfaces/IRestaurante';
 import { TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Paper, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
 import http from 'plugins/axios';

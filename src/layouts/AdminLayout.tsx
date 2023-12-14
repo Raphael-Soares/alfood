@@ -24,6 +24,18 @@ const FormularioRestaurante = () => {
                   Novo Restaurante
                 </Button>
               </Link>
+
+              <Link component={RouterLink} to='/admin/pratos/'>
+                <Button sx={{ color: 'white', my: 2 }} variant='outlined'>
+                  Pratos
+                </Button>
+              </Link>
+
+              <Link component={RouterLink} to='/admin/pratos/novo'>
+                <Button sx={{ color: 'white', my: 2 }} variant='outlined'>
+                  Novo Prato
+                </Button>
+              </Link>
             </Box>
           </Toolbar>
         </Container>
