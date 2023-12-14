@@ -1,21 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import IRestaurante from '../../interfaces/IRestaurante';
 import { TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Paper, Button } from '@mui/material';
-import axios from 'axios';
-import { IPaginacao } from '../../interfaces/IPaginacao';
 import { Link } from 'react-router-dom';
+import http from 'plugins/axios';
 
 export default function Administracao() {
   const [restaurantes, setRestaurantes] = useState<IRestaurante[]>([]);
 
   useEffect(() => {
-    axios.get<IRestaurante[]>('http://localhost:8000/api/v2/restaurantes/').then((resposta) => {
+    http.get<IRestaurante[]>('/restaurantes/').then((resposta) => {
       setRestaurantes(resposta.data);
     });
   }, []);
 
   function excluirRestaurante(id: number) {
-    axios.delete(`http://localhost:8000/api/v2/restaurantes/${id}/`).then((resposta) => {
+    http.delete(`/restaurantes/${id}/`).then((resposta) => {
       setRestaurantes(restaurantes.filter((restaurante) => restaurante.id !== id));
     });
   }
@@ -35,7 +34,12 @@ export default function Administracao() {
             <TableRow key={restaurante.id}>
               <TableCell>{restaurante.nome}</TableCell>
               <TableCell>
-                <Link to={`/admin/restaurantes/${restaurante.id}`}>[editar]</Link>
+                <Link to={`/admin/restaurantes/${restaurante.id}`}>
+                  <Button variant='outlined'>editar</Button>
+                </Link>
+              </TableCell>
+
+              <TableCell>
                 <Button variant='outlined' color='error' onClick={() => excluirRestaurante(restaurante.id)}>
                   excluir
                 </Button>

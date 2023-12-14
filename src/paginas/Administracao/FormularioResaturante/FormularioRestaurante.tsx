@@ -1,48 +1,66 @@
-import { Button, TextField } from '@mui/material';
-import React, { useEffect, useState } from 'react';
-
-import axios from 'axios';
+import { AppBar, Box, Button, Container, Link, Paper, TextField, Toolbar, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import http from 'plugins/axios';
+import IRestaurante from '../../../interfaces/IRestaurante';
 
-export default function FormularioRestaurante() {
-  const { id } = useParams<{ id: string }>();
+import { Link as RouterLink } from 'react-router-dom';
+
+const FormularioRestaurante = () => {
+  const parametros = useParams();
 
   useEffect(() => {
-    if (id) {
-      axios.get(`http://localhost:8000/api/v2/restaurantes/${id}/`).then((resposta) => {
-        setNome(resposta.data.nome);
-        console.log(resposta.data);
-      });
+    if (parametros.id) {
+      http
+        .get<IRestaurante>(`/restaurantes/${parametros.id}/`)
+        .then((resposta) => setNomeRestaurante(resposta.data.nome));
     }
-  }, [id]);
+  }, [parametros]);
 
-  const [nome, setNome] = useState('');
+  const [nomeRestaurante, setNomeRestaurante] = useState('');
 
-  function onSubmit(evento: React.FormEvent<HTMLFormElement>) {
+  const aoSubmeterForm = (evento: React.FormEvent<HTMLFormElement>) => {
     evento.preventDefault();
 
-    if (id) {
-      axios.put(`http://localhost:8000/api/v2/restaurantes/${id}/`, {
-        nome: nome
-      });
+    if (parametros.id) {
+      http
+        .put(`restaurantes/${parametros.id}/`, {
+          nome: nomeRestaurante
+        })
+        .then(() => {
+          alert('Restaurante atualizado com sucesso!');
+        });
     } else {
-      axios.post('http://localhost:8000/api/v2/restaurantes/', {
-        nome: nome
-      });
+      http
+        .post('restaurantes/', {
+          nome: nomeRestaurante
+        })
+        .then(() => {
+          alert('Restaurante cadastrado com sucesso!');
+        });
     }
-  }
+  };
 
   return (
-    <form onSubmit={onSubmit}>
-      <TextField
-        label='Nome do Restaurante'
-        variant='standard'
-        value={nome}
-        onChange={(e) => setNome(e.target.value)}
-      />
-      <Button variant='contained' color='primary' type='submit'>
-        Salvar
-      </Button>
-    </form>
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexGrow: 1 }}>
+      <Typography component='h1' variant='h6'>
+        Formulário de Restaurantes
+      </Typography>
+      <Box component='form' sx={{ width: '100%' }} onSubmit={aoSubmeterForm}>
+        <TextField
+          value={nomeRestaurante}
+          onChange={(evento) => setNomeRestaurante(evento.target.value)}
+          label='Nome do Restaurante'
+          variant='standard'
+          fullWidth
+          required
+        />
+        <Button sx={{ marginTop: 1 }} type='submit' fullWidth variant='outlined'>
+          Salvar
+        </Button>
+      </Box>
+    </Box>
   );
-}
+};
+
+export default FormularioRestaurante;
